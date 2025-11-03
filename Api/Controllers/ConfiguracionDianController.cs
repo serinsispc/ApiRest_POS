@@ -9,7 +9,7 @@ namespace Api.Controllers
     [ApiController]
     public class ConfiguracionDianController : ControllerBase
     {
-        [HttpGet("Consultar/{idambiente}")]
+        [HttpPost("Consultar/{idambiente}")]
         [TokenDbFilter]
         public async Task<IActionResult> ConsultarIdAmbiente(int idambiente)
         {

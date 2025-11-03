@@ -8,7 +8,7 @@ namespace Api.Controllers
     [ApiController]
     public class SedeController : ControllerBase
     {
-        [HttpGet("Consultar")]
+        [HttpPost("Consultar")]
         [TokenDbFilter]
         public async Task<IActionResult> Conultar()
         {

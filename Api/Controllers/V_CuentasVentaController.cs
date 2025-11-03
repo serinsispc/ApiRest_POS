@@ -17,7 +17,7 @@ namespace Api.Controllers
             var resp =await V_CuentasVenta_controler.Lista($"{db}", request.IdBase,request.MultiCaja);
             return Ok(resp);
         }
-        [HttpGet("ListaMesero/{idMesero}")]
+        [HttpPost("ListaMesero/{idMesero}")]
         [TokenDbFilter]
         public async Task<IActionResult> ListaMesero(int idMesero)
         {

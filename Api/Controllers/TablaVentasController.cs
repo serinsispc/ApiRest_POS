@@ -9,7 +9,7 @@ namespace Api.Controllers
     [ApiController]
     public class TablaVentasController : ControllerBase
     {
-        [HttpGet("Cosultar/{id}")]
+        [HttpPost("Cosultar/{id}")]
         [TokenDbFilter]
         public async Task<IActionResult>ConsultarID(int id)
         {

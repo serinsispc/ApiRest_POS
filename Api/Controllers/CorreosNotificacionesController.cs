@@ -8,7 +8,7 @@ namespace Api.Controllers
     [ApiController]
     public class CorreosNotificacionesController : ControllerBase
     {
-        [HttpGet("Lista")]
+        [HttpPost("Lista")]
         [TokenDbFilter]
         public async Task<IActionResult> Lista()
         {

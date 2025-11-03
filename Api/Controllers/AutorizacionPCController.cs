@@ -37,7 +37,7 @@ namespace Api.Controllers
             var resp = await AutorizacionPC_controler.Crear_Editar_Eliminar_Equipo(requests,0, $"{db}");
             return Ok(resp);
         }
-        [HttpPut("Update")]
+        [HttpPost("Update")]
         [TokenDbFilter]
         public async Task<IActionResult> Update(AutorizacionPC requests)
         {
@@ -46,7 +46,7 @@ namespace Api.Controllers
             var resp = await AutorizacionPC_controler.Crear_Editar_Eliminar_Equipo(requests, 1,$"{db}");
             return Ok(resp);
         }
-        [HttpDelete("Delete")]
+        [HttpPost("Delete")]
         [TokenDbFilter]
         public async Task<IActionResult> Delete(AutorizacionPC requests)
         {

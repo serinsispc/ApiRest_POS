@@ -9,7 +9,7 @@ namespace Api.Controllers
     [ApiController]
     public class AdminControlController : ControllerBase
     {
-        [HttpGet("Consultar")]
+        [HttpPost("Consultar")]
         [TokenDbFilter]
         public async Task<IActionResult> Consultar()
         {

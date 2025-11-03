@@ -8,7 +8,7 @@ namespace Api.Controllers
     [ApiController]
     public class VendedorController : ControllerBase
     {
-        [HttpGet("Consultar/{id}")]
+        [HttpPost("Consultar/{id}")]
         [TokenDbFilter]
         public async Task<IActionResult>Consultar(int id)
         {

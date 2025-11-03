@@ -8,7 +8,7 @@ namespace Api.Controllers
     [ApiController]
     public class V_CategoriaController : ControllerBase
     {
-        [HttpGet("ListaActiva")]
+        [HttpPost("ListaActiva")]
         [TokenDbFilter]
         public async Task<IActionResult> ListaActiva()
         {

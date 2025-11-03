@@ -21,7 +21,7 @@ namespace Api.Controllers
             await cn.EjecutarConsulta($"{db}",query1);
             return Ok();
         }
-        [HttpGet("HallarIdMetodoDePagoInterno/{idmediop}")]
+        [HttpPost("HallarIdMetodoDePagoInterno/{idmediop}")]
         [TokenDbFilter]
         public async Task<IActionResult> HallarIdMetodoDePagoInterno(int idmediop)
         {
@@ -32,7 +32,7 @@ namespace Api.Controllers
             var lista = JsonConvert.DeserializeObject<List<R_MediosDePago_MediosDePagoInternos>>(result).FirstOrDefault();
             return Ok((int)lista.idMediosDePagoInternos);
         }
-        [HttpGet("HallarMediosDePagoRelacionedos/{idmediop}")]
+        [HttpPost("HallarMediosDePagoRelacionedos/{idmediop}")]
         [TokenDbFilter]
         public async Task<IActionResult> HallarMediosDePagoRelacionedos(int idmediop)
         {
@@ -43,6 +43,17 @@ namespace Api.Controllers
             var lista = JsonConvert.DeserializeObject<List<R_MediosDePago_MediosDePagoInternos>>(result).ToList();
             int cantidad= lista.Count;
             return Ok(cantidad);
+        }
+
+        [HttpPost("EliminarCuenta/{id}")]
+        [TokenDbFilter]
+        public async Task<IActionResult> EliminarCuenta(int id)
+        {
+            var db = HttpContext.Items["DB"];
+            string query = $"EXEC EliminarCuenta {id}";
+            var cn=new ConnectionSQL();
+            await cn.EjecutarConsulta($"{db}", query);
+            return Ok();
         }
     }
 }

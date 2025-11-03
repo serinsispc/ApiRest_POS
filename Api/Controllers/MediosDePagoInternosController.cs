@@ -8,7 +8,7 @@ namespace Api.Controllers
     [ApiController]
     public class MediosDePagoInternosController : ControllerBase
     {
-        [HttpGet("Consultar/{idmp}")]
+        [HttpPost("Consultar/{idmp}")]
         [TokenDbFilter]
         public async Task<IActionResult>Conaultar(int idmp)
         {
@@ -17,7 +17,7 @@ namespace Api.Controllers
             return Ok(resp);
         }
 
-        [HttpGet("Lista")]
+        [HttpPost("Lista")]
         [TokenDbFilter]
         public async Task<IActionResult> Lista()
         {

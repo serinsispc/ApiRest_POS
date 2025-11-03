@@ -8,7 +8,7 @@ namespace Api.Controllers
     [ApiController]
     public class payment_methodsController : ControllerBase
     {
-        [HttpGet("lista")]
+        [HttpPost("lista")]
         [TokenDbFilter]
         public async Task<IActionResult> Lista()
         {

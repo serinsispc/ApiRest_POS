@@ -15,7 +15,7 @@ namespace DAL.Controler.Views
             try
             {
                 string query = $@"
-            SELECT * FROM V_TurnosCaja 
+            SELECT top 1 * FROM V_TurnosCaja 
             WHERE estadoBase = '{Estado}' AND idUsuarioApertura = {IdUsuario}";
                 var cn = new ConnectionSQL();
                 var resp =await cn.EjecutarConsulta(db,query, true);
@@ -40,7 +40,7 @@ namespace DAL.Controler.Views
             try
             {
                 string query = $@"
-            SELECT * FROM V_TurnosCaja 
+            SELECT top 1 * FROM V_TurnosCaja 
             WHERE id = {id}";
                 var cn = new ConnectionSQL();
                 var resp = await cn.EjecutarConsulta(db, query);

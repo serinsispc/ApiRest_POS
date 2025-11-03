@@ -9,7 +9,7 @@ namespace Api.Controllers
     [ApiController]
     public class LicenciaController : ControllerBase
     {
-        [HttpGet("Consultar/{claveLicencia}")]
+        [HttpPost("Consultar/{claveLicencia}")]
         [TokenDbFilter]
         public async Task<IActionResult>Consultar(string claveLicencia)
         {

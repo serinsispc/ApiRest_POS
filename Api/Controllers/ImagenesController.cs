@@ -9,7 +9,7 @@ namespace Api.Controllers
     [ApiController]
     public class ImagenesController : ControllerBase
     {
-        [HttpGet("ConsultarGUID/{idguid}")]
+        [HttpPost("ConsultarGUID/{idguid}")]
         [TokenDbFilter]
         public async Task<IActionResult> ConsultarGUID(string idguid)
         {

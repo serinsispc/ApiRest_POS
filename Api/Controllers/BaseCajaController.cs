@@ -9,7 +9,7 @@ namespace Api.Controllers
     [ApiController]
     public class BaseCajaController : ControllerBase
     {
-        [HttpGet("ConsultarActiva/{idusuario}")]
+        [HttpPost("ConsultarActiva/{idusuario}")]
         [TokenDbFilter]
         public async Task<IActionResult> ConsultarActiva(int idusuario)
         {
@@ -19,7 +19,7 @@ namespace Api.Controllers
                 return Ok(0);
             return Ok(resp.id);
         }
-        [HttpGet("Consultar/{id}")]
+        [HttpPost("Consultar/{id}")]
         [TokenDbFilter]
         public async Task<IActionResult> Consultar(int id)
         {

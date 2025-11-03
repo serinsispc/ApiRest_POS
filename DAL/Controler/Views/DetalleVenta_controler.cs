@@ -64,6 +64,12 @@ namespace DAL.Controler.Views
                 var cn = new ConnectionSQL();
                 string resp =await cn.EjecutarConsulta(db,query);
                 var respuestasql = JsonConvert.DeserializeObject<RespuestaCRUD>(resp);
+                if (respuestasql.estado)
+                {
+                    string query_ = $"EXEC EliminarComandaImpresa {objDetalleV.id}";
+                    var cn_ = new ConnectionSQL();
+                    await cn_.EjecutarConsulta(db, query_);
+                }
                 return respuestasql.estado;
             }
             catch (Exception ex)

@@ -15,7 +15,7 @@ namespace DAL
         public static string connectionString = string.Empty;
         public static void ConexionBase(string db)
         {
-            connectionString = $"data source =www.serinsispc.com; initial catalog ={db}; user id =emilianop; password =Ser1ns1s@2020*";
+            connectionString = $"data source =51.222.245.217; initial catalog ={db}; user id =emilianop; password =Ser1ns1s@2020*";
         }
         public async Task<string> EjecutarConsulta(string db,string consulta, [Optional] bool lista_)
         {

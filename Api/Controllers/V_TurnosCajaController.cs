@@ -8,7 +8,7 @@ namespace Api.Controllers
     [ApiController]
     public class V_TurnosCajaController : ControllerBase
     {
-        [HttpGet("Cosultar/{idusuario}")]
+        [HttpPost("Cosultar/{idusuario}")]
         [TokenDbFilter]
         public async Task<IActionResult> Consultar(int idusuario)
         {
@@ -17,7 +17,7 @@ namespace Api.Controllers
             return Ok(resp);
         }
 
-        [HttpGet("Base/{id}")]
+        [HttpPost("Base/{id}")]
         [TokenDbFilter]
         public async Task<IActionResult> ConsultarID(int id)
         {
