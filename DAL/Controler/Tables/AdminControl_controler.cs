@@ -23,7 +23,7 @@ namespace DAL.Controler.Tables
                 }
                 else
                 {
-                    return null;
+                    return new AdminControl();
                 }
             }
             catch (Exception ex)

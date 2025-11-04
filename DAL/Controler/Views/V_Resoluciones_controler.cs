@@ -17,7 +17,7 @@ namespace DAL.Controler.Views
             {
                 var cn = new ConnectionSQL();
                 var query = $"select *from V_Resoluciones where estado = 1";
-                var resp = await cn.EjecutarConsulta(db,query);
+                var resp = await cn.EjecutarConsulta(db,query,true);
                 if(resp != null )
                 {
                     return JsonConvert.DeserializeObject<List<V_Resoluciones>>(resp);

@@ -1,6 +1,8 @@
 ﻿
 using DAL.Controler.Views;
 using DAL.Models.Tables;
+using DAL.Models.Views;
+using DAL.Requests_Responses.Caja;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,14 +21,13 @@ namespace Api.Controllers
             if (resp)
             {
                 var respDetalle = await V_DetalleCaja_controler.Consultar_idVenta((int)detalle.idVenta,$"{db}");
-                if (respDetalle != null)
+          
                     return Ok(respDetalle);
 
-                return Ok(null);
             }
             else
             {
-                return Ok(null);
+                return Ok(new List<V_DetalleCaja>());
             }
         }
     }

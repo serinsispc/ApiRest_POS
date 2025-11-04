@@ -23,7 +23,7 @@ namespace DAL.Controler.Tables
                 }
                 else
                 {
-                    return null;
+                    return new R_VentaUsuario();
                 }
             }
             catch (Exception ex)

@@ -238,15 +238,24 @@ namespace Api.Controllers
         {
             var db = HttpContext.Items["DB"];
             var detalle = await DetalleVenta_controler.Consultar_DetalleCaja($"{db}",id);
-            bool sqlDetalle = await DetalleVenta_controler.GuardarEditarEliminar(detalle, 2, $"{db}");
-            if (sqlDetalle == true)
+            if (detalle != null)
             {
-                var detalleCajas = await V_DetalleCaja_controler.Consultar_idVenta((int)detalle.idVenta, $"{db}");
-                return Ok(detalleCajas);
+                detalle.observacion = $"eliminado {DateTime.Now}";
+                detalle.estadoDetalle = 0;
+                bool sqlDetalle = await DetalleVenta_controler.GuardarEditarEliminar(detalle, 1, $"{db}");
+                if (sqlDetalle == true)
+                {
+                    var detalleCajas = await V_DetalleCaja_controler.Consultar_idVenta((int)detalle.idVenta, $"{db}");
+                    return Ok(detalleCajas);
+                }
+                else
+                {
+                    return Ok(new List<V_DetalleCaja>());
+                }
             }
             else
             {
-                return Ok(null);
+                return Ok(new List<V_DetalleCaja>());
             }
            
         }

@@ -23,13 +23,13 @@ namespace DAL.Controler.Views
                 }
                 else
                 {
-                    return null;
+                    return new List<V_DetalleCaja>();
                 }
             }
             catch (Exception ex)
             {
                 string msg = ex.Message;
-                return null;
+                return new List<V_DetalleCaja>();
             }
         }
     }

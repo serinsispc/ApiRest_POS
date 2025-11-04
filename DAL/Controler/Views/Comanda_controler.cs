@@ -26,13 +26,13 @@ namespace DAL.Controler.Views
                 }
                 else
                 {
-                    return null;
+                    return new List<Comanda>();
                 }
             }
             catch (Exception ex)
             {
                 string error = ex.Message;
-                return null;
+                return new List<Comanda>();
             }
         }
     }
