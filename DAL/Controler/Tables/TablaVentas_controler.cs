@@ -44,5 +44,22 @@ namespace DAL.Controler.Tables
                 return null;
             }
         }
+
+        public static async Task<int> Consecutivo(int idResolucion, string db)
+        {
+            try
+            {
+                var query = $"SELECT MAX(numeroVenta) FROM TablaVentas WHERE idResolucion = {idResolucion}";
+                var cn = new ConnectionSQL();
+                var respuestaJson = await cn.EjecutarConsulta(db, query);
+                var respCRUD = JsonConvert.DeserializeObject<int>(respuestaJson);
+                return respCRUD;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                return 0;
+            }
+        }
     }
 }

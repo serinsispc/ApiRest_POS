@@ -41,5 +41,13 @@ namespace Api.Controllers
             var resp = await TablaVentas_controler.Crud(tablaVentas, 2, $"{db}");
             return Ok(resp);
         }
+        [HttpPost("Consecutivo/{idResolucion}")]
+        [TokenDbFilter]
+        public async Task<IActionResult> Consecutivo(int idResolucion)
+        {
+            var db = HttpContext.Items["DB"];
+            var resp = await TablaVentas_controler.Consecutivo(idResolucion,$"{db}");
+            return Ok(resp);
+        }
     }
 }

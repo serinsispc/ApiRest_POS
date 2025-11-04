@@ -3,6 +3,7 @@ using DAL.Controler.Tables;
 using DAL.Controler.Views;
 using DAL.Funciones;
 using DAL.Models.Tables;
+using DAL.Models.Views;
 using DAL.Requests_Responses.Caja;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,9 +36,8 @@ namespace Api.Controllers
                         viewModel.guid = new Guid(niewVenta.mensaje);
                         //ahora creamos la relación del mesero con la venta
                         R_VentaVendedor_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase_Mesero);
-                        viewModel.listacuentas = await V_CuentasVenta_controler.ListaMesero($"{db}", requests.IdBase_Mesero);
-                        
-                        viewModel.cuenta = viewModel.listacuentas.FirstOrDefault();
+                        viewModel.listacuentas = await ObtenerCuentasConReintentosAsync($"{db}", requests.IdBase_Mesero, requests.MultiCaja);
+                        viewModel.cuenta = viewModel.listacuentas.LastOrDefault();
                         viewModel.venta = await V_TablaVentas_controler.Consulta_id(viewModel.idventa, $"{db}");
                     }
                     else
@@ -134,8 +134,7 @@ namespace Api.Controllers
                     viewModel.guid =new Guid(niewVenta.mensaje);
                     // ahora relacionamos el vendedor con la venta
                     R_VentaBase_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase_Mesero);
-                    viewModel.listacuentas = await V_CuentasVenta_controler.Lista($"{db}", requests.IdBase_Mesero, requests.MultiCaja);
-                   
+                    viewModel.listacuentas = await ObtenerCuentasConReintentosAsync($"{db}", requests.IdBase_Mesero, requests.MultiCaja);
                     viewModel.cuenta = viewModel.listacuentas.LastOrDefault();
                     viewModel.idventa = viewModel.cuenta.id;
                     viewModel.venta = await V_TablaVentas_controler.Consulta_id(viewModel.idventa, $"{db}");
@@ -149,6 +148,26 @@ namespace Api.Controllers
 
             return Ok(viewModel);
         }
+
+        public static async Task<List<V_CuentasVenta>> ObtenerCuentasConReintentosAsync(
+    string db, int idBaseMesero, bool multiCaja, int reintentos = 3, int delayMs = 150)
+        {
+            List<V_CuentasVenta> resultado = null;
+
+            for (int intento = 1; intento <= reintentos; intento++)
+            {
+                resultado = await V_CuentasVenta_controler.Lista(db, idBaseMesero, multiCaja);
+
+                if (resultado != null && resultado.Count > 0)
+                    return resultado;
+
+                if (intento < reintentos)
+                    await Task.Delay(delayMs * intento); // backoff lineal
+            }
+
+            return resultado ?? new List<V_CuentasVenta>(); // jamás null
+        }
+
         [HttpPost("CargarDetalle")]
         [TokenDbFilter]
         public async Task<IActionResult> CargarDetalle(CargarDetalleRequests requests)
