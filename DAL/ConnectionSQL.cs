@@ -15,8 +15,8 @@ namespace DAL
         public static string connectionString = string.Empty;
         public static void ConexionBase(string db)
         {
-            connectionString = $"data source =.; initial catalog ={db}; user id =emilianop; password =Ser1ns1s@2020*";
-            //connectionString = $"data source =51.222.245.217; initial catalog ={db}; user id =emilianop; password =Ser1ns1s@2020*";
+            //connectionString = $"data source =.; initial catalog ={db}; user id =emilianop; password =Ser1ns1s@2020*";
+            connectionString = $"data source =51.222.245.217; initial catalog ={db}; user id =emilianop; password =Ser1ns1s@2020*";
         }
         public async Task<string> EjecutarConsulta(string db,string consulta, [Optional] bool lista_)
         {
@@ -73,5 +73,34 @@ namespace DAL
             }
 
         }
+
+        public async Task<string> EjecutarConsultaJsonDirecto(string db, string consulta)
+        {
+            try
+            {
+                ConexionBase(db);
+
+                using var conexion = new SqlConnection(connectionString);
+                await conexion.OpenAsync();
+
+                using var cmd = new SqlCommand(consulta, conexion)
+                { CommandType = CommandType.Text };
+
+                // Lee el valor directamente
+                var result = await cmd.ExecuteScalarAsync();
+
+                // Convierte a string
+                string json = result?.ToString() ?? "[]";
+
+                return json;
+            }
+            catch (Exception ex)
+            {
+                // Loguea el error si quieres
+                string msg = ex.Message;
+                return null;
+            }
+        }
+
     }
 }
