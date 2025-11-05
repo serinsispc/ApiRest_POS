@@ -25,7 +25,7 @@ namespace Api.Controllers
             if (requests.Comandera)//identificamos si la caja es comandare o caja.
             {
                 //procedemos a consultar si el mesero tiene cuantas activas
-                viewModel.listacuentas =await V_CuentasVenta_controler.ListaMesero($"{db}",requests.IdBase_Mesero);
+                viewModel.listacuentas =await V_CuentasVenta_controler.ListaMesero($"{db}",requests.IdVendedor);
                 if(viewModel.listacuentas==null || viewModel.listacuentas.Count == 0)
                 {
                     //creamos una nueva cuenta
@@ -35,8 +35,8 @@ namespace Api.Controllers
                         viewModel.idventa = niewVenta.idAfectado;
                         viewModel.guid = new Guid(niewVenta.mensaje);
                         //ahora creamos la relación del mesero con la venta
-                        R_VentaVendedor_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase_Mesero);
-                        viewModel.listacuentas = await ObtenerCuentasConReintentosAsync($"{db}", requests.IdBase_Mesero, requests.MultiCaja);
+                        R_VentaVendedor_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdVendedor);
+                        viewModel.listacuentas = await RepetirVendedor($"{db}", requests.IdVendedor, requests.MultiCaja);
                         viewModel.cuenta = viewModel.listacuentas.LastOrDefault();
                         viewModel.venta = await V_TablaVentas_controler.Consulta_id(viewModel.idventa, $"{db}");
                     }
@@ -56,8 +56,8 @@ namespace Api.Controllers
             else
             {
                 //en esta parte procedemos a consultar las cuentas activas por idBase
-                //procedemos a consultar si el mesero tiene cuantas activas
-                viewModel.listacuentas = await V_CuentasVenta_controler.Lista($"{db}", requests.IdBase_Mesero,requests.MultiCaja);
+                //procedemos a consultar si el usuario tiene cuantas activas
+                viewModel.listacuentas = await V_CuentasVenta_controler.Lista($"{db}", requests.IdUsuario,requests.MultiCaja);
                 if (viewModel.listacuentas == null || viewModel.listacuentas.Count == 0)
                 {
                     //creamos una nueva cuenta
@@ -67,8 +67,8 @@ namespace Api.Controllers
                         viewModel.idventa = niewVenta.idAfectado;
                         viewModel.guid = new Guid(niewVenta.mensaje);
                         // ahora relacionamos el vendedor con la venta
-                        R_VentaBase_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase_Mesero);
-                        viewModel.listacuentas = await V_CuentasVenta_controler.Lista($"{db}", requests.IdBase_Mesero, requests.MultiCaja);
+                        var resprelacion = await R_VentaBase_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase);
+                        viewModel.listacuentas = await V_CuentasVenta_controler.Lista($"{db}", requests.IdUsuario, requests.MultiCaja);
                         viewModel.cuenta = viewModel.listacuentas.FirstOrDefault();
                         viewModel.venta = await V_TablaVentas_controler.Consulta_id(viewModel.idventa, $"{db}");
                     }
@@ -111,9 +111,9 @@ namespace Api.Controllers
                     viewModel.idventa = niewVenta.idAfectado;
                     viewModel.guid = new Guid(niewVenta.mensaje);
                     //ahora creamos la relación del mesero con la venta
-                    R_VentaVendedor_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase_Mesero);
+                    R_VentaVendedor_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdVendedor);
                     //procedemos a consultar si el mesero tiene cuantas activas
-                    viewModel.listacuentas = await V_CuentasVenta_controler.ListaMesero($"{db}", requests.IdBase_Mesero);
+                    viewModel.listacuentas = await V_CuentasVenta_controler.ListaMesero($"{db}", requests.IdVendedor);
                     viewModel.cuenta = viewModel.listacuentas.LastOrDefault();
                     viewModel.idventa = viewModel.cuenta.id;
                     viewModel.venta = await V_TablaVentas_controler.Consulta_id(viewModel.idventa, $"{db}");
@@ -127,14 +127,14 @@ namespace Api.Controllers
             else
             {
                 //creamos una nueva cuenta
-                var niewVenta = await TablaVentas_f.NuevaVenta($"{db}", requests.IdBase_Mesero, requests.PorPropina);
+                var niewVenta = await TablaVentas_f.NuevaVenta($"{db}", requests.IdBase, requests.PorPropina);
                 if (niewVenta.estado)
                 {
                     viewModel.idventa = niewVenta.idAfectado;
                     viewModel.guid =new Guid(niewVenta.mensaje);
                     // ahora relacionamos el vendedor con la venta
-                    R_VentaBase_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase_Mesero);
-                    viewModel.listacuentas = await ObtenerCuentasConReintentosAsync($"{db}", requests.IdBase_Mesero, requests.MultiCaja);
+                    var resprelacion=await R_VentaBase_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase);
+                    viewModel.listacuentas = await RepetirUsuario($"{db}", requests.IdUsuario, requests.MultiCaja);
                     viewModel.cuenta = viewModel.listacuentas.LastOrDefault();
                     viewModel.idventa = viewModel.cuenta.id;
                     viewModel.venta = await V_TablaVentas_controler.Consulta_id(viewModel.idventa, $"{db}");
@@ -149,14 +149,14 @@ namespace Api.Controllers
             return Ok(viewModel);
         }
 
-        public static async Task<List<V_CuentasVenta>> ObtenerCuentasConReintentosAsync(
-    string db, int idBaseMesero, bool multiCaja, int reintentos = 3, int delayMs = 150)
+        public static async Task<List<V_CuentasVenta>> RepetirUsuario(
+    string db, int idusuario, bool multiCaja, int reintentos = 3, int delayMs = 150)
         {
             List<V_CuentasVenta> resultado = null;
 
             for (int intento = 1; intento <= reintentos; intento++)
             {
-                resultado = await V_CuentasVenta_controler.Lista(db, idBaseMesero, multiCaja);
+                resultado = await V_CuentasVenta_controler.Lista(db, idusuario, multiCaja);
 
                 if (resultado != null && resultado.Count > 0)
                     return resultado;
@@ -168,6 +168,24 @@ namespace Api.Controllers
             return resultado ?? new List<V_CuentasVenta>(); // jamás null
         }
 
+        public static async Task<List<V_CuentasVenta>> RepetirVendedor(
+string db, int idvendedor, bool multiCaja, int reintentos = 3, int delayMs = 150)
+        {
+            List<V_CuentasVenta> resultado = null;
+
+            for (int intento = 1; intento <= reintentos; intento++)
+            {
+                resultado = await V_CuentasVenta_controler.ListaMesero(db, idvendedor);
+
+                if (resultado != null && resultado.Count > 0)
+                    return resultado;
+
+                if (intento < reintentos)
+                    await Task.Delay(delayMs * intento); // backoff lineal
+            }
+
+            return resultado ?? new List<V_CuentasVenta>(); // jamás null
+        }
         [HttpPost("CargarDetalle")]
         [TokenDbFilter]
         public async Task<IActionResult> CargarDetalle(CargarDetalleRequests requests)

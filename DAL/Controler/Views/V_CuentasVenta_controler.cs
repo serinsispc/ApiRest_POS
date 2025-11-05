@@ -11,19 +11,19 @@ namespace DAL.Controler.Views
 {
     public class V_CuentasVenta_controler
     {
-        public static async Task<List<V_CuentasVenta>> Lista(string db, int idBase,bool multi)
+        public static async Task<List<V_CuentasVenta>> Lista(string db, int idusuario,bool multi)
         {
             try
             {
                 var cn = new ConnectionSQL();
                 string query = string.Empty;
-                if (multi)
+                if (!multi)
                 {
                     query = $"select *from V_CuentasVenta where numeroVenta=0";
                 }
                 else
                 {
-                    query = $"select *from V_CuentasVenta where numeroVenta=0 and idbase={idBase}";
+                    query = $"select *from V_CuentasVenta where numeroVenta=0 and idusuario={idusuario}";
                 }
                
                 var resp = await cn.EjecutarConsulta(db, query, true);
