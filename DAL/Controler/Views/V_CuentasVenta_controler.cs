@@ -33,13 +33,13 @@ namespace DAL.Controler.Views
                 }
                 else
                 {
-                    return null;
+                    return new List<V_CuentasVenta>();
                 }
             }
             catch (Exception ex)
             {
                 string error = ex.Message;
-                return null;
+                return new List<V_CuentasVenta>();
             }
         }
         public static async Task<List<V_CuentasVenta>> ListaMesero(
