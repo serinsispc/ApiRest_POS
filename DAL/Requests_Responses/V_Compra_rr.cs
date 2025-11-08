@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DAL.Requests_Responses
+{
+    public class V_Compra_rr
+    {
+        public DateTime Fecha {  get; set; }
+    }
+}
