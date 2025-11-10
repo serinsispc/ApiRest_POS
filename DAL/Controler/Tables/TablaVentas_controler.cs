@@ -25,7 +25,7 @@ namespace DAL.Controler.Tables
             catch (Exception ex)
             {
                 string error = ex.Message;
-                return new RespuestaCRUD { estado=false, idAfectado=0, mensaje="error" };
+                return new RespuestaCRUD { estado=false, idAfectado="0", mensaje="error" };
             }
         }
         public static async Task<TablaVentas>ConsultarId(int id, string db)

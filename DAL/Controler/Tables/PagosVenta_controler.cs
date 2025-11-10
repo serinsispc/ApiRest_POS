@@ -15,7 +15,7 @@ namespace DAL.Controler.Tables
             try
             {
                 var cn = new ConnectionSQL();
-                var query = $"EXEC INSERT_INTO_PagosVenta '[{json}]'";
+                var query = $"EXEC INSERT_INTO_PagosVenta '{json}'";
                 var res = await cn.EjecutarConsulta(db,query);
                 var respcru=JsonConvert.DeserializeObject<RespuestaCRUD>(res);
                 return respcru;
@@ -23,7 +23,7 @@ namespace DAL.Controler.Tables
             catch(Exception ex)
             {
                 string msg = ex.Message;
-                return new RespuestaCRUD { estado = false, idAfectado = 0, mensaje="error" };
+                return new RespuestaCRUD { estado = false, idAfectado = "0", mensaje="error" };
             }
         }
     }

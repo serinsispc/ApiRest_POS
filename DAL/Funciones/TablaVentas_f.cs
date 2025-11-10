@@ -46,7 +46,7 @@ namespace DAL.Funciones
                 }
                 else
                 {
-                    return new RespuestaCRUD { estado=false, idAfectado=0, mensaje="error" };
+                    return new RespuestaCRUD { estado=false, idAfectado="0", mensaje="error" };
                 }
             }
             catch (Exception ex)

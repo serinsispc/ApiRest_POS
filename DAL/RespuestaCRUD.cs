@@ -9,13 +9,14 @@ namespace DAL
 {
     public class RespuestaCRUD
     {
-        public bool estado {  get; set; }
-        public int nuevoId { get; set; }
-        public int idAfectado { get; set; }
+        public bool estado { get; set; }
+        public string nuevoId { get; set; }
+        public string idAfectado { get; set; }
         public string mensaje { get; set; }
 
-        [JsonIgnore] // opcional: para no enviarla en el JSON
-        public int IdFinal => idAfectado != 0 ? idAfectado : nuevoId;
-
+        [JsonIgnore] // No se envía al serializar
+        public string IdFinal =>
+            !string.IsNullOrEmpty(idAfectado) ? idAfectado : nuevoId;
     }
+
 }
