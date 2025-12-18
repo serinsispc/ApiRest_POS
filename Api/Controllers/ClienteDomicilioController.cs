@@ -9,15 +9,16 @@ namespace Api.Controllers
     [ApiController]
     public class ClienteDomicilioController : ControllerBase
     {
-        [HttpPost("Filtrar/{telefono}")]
+        [HttpPost("lista")]
         [TokenDbFilter]
-        public async Task<IActionResult> FiltarTelefono(string telefono)
+        public async Task<IActionResult> FiltarTelefono()
         {
             var db = HttpContext.Items["DB"];
-            var resp = await ClienteDomicilio_controler.FiltrarTelefono($"{db}",telefono);
+            var resp = await ClienteDomicilio_controler.lista($"{db}");
             return Ok(resp);
         }
         [HttpPost("CRUD/{boton}")]
+        [TokenDbFilter]
         public async Task<IActionResult> Insert(int boton,ClienteDomicilio cliente)
         {
             var db = HttpContext.Items["DB"];

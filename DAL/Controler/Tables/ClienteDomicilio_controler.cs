@@ -10,12 +10,12 @@ namespace DAL.Controler.Tables
 {
     public class ClienteDomicilio_controler
     {
-        public static async Task<List<ClienteDomicilio>>FiltrarTelefono(string db,string telefono)
+        public static async Task<List<ClienteDomicilio>>lista(string db)
         {
             try
             {
                 var cn = new ConnectionSQL();
-                var query = $"SELECT * FROM ClienteDomicilio WHERE celularCliente = '{telefono}'";
+                var query = $"SELECT * FROM ClienteDomicilio";
                 var resp = await cn.EjecutarConsulta(db, query, true);
                 if (resp != null)
                 {

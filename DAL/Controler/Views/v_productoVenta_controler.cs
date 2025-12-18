@@ -10,12 +10,12 @@ namespace DAL.Controler.Views
 {
     public class v_productoVenta_controler
     {
-        public static async Task<List<v_productoVenta>>Lista(string db, int estadoProducto,int visible)
+        public static async Task<List<v_productoVenta>>Lista(string db, int estadoProducto)
         {
             try
             {
                 var cn = new ConnectionSQL();
-                var query = $"select *from v_productoVenta where estadoProducto={estadoProducto} and visible={visible}";
+                var query = $"select *from v_productoVenta where estadoProducto={estadoProducto}";
                 var resp = await cn.EjecutarConsulta(db,query,true);
                 if (resp != null) { return JsonConvert.DeserializeObject<List<v_productoVenta>>(resp); }
                 return null;

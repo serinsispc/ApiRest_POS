@@ -11,7 +11,7 @@ namespace DAL.Controler.Views
 {
     public class V_CuentasVenta_controler
     {
-        public static async Task<List<V_CuentasVenta>> Lista(string db, int idusuario,bool multi)
+        public static async Task<List<V_CuentasVenta>> Lista(string db, int idBase,bool multi)
         {
             try
             {
@@ -23,7 +23,7 @@ namespace DAL.Controler.Views
                 }
                 else
                 {
-                    query = $"select *from V_CuentasVenta where numeroVenta=0 and idusuario={idusuario}";
+                    query = $"select *from V_CuentasVenta where numeroVenta=0 and idbase={idBase}";
                 }
                
                 var resp = await cn.EjecutarConsulta(db, query, true);

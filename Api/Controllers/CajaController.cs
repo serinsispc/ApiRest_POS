@@ -32,10 +32,10 @@ namespace Api.Controllers
                     var niewVenta = await TablaVentas_f.NuevaVenta($"{db}",0,requests.PorPropina);
                     if (niewVenta != null)
                     {
-                        viewModel.idventa = niewVenta.idAfectado;
+                        viewModel.idventa =Convert.ToInt32(niewVenta.idAfectado);
                         viewModel.guid = new Guid(niewVenta.mensaje);
                         //ahora creamos la relación del mesero con la venta
-                        R_VentaVendedor_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdVendedor);
+                        R_VentaVendedor_f.GestionarRelacion($"{db}", Convert.ToInt32(niewVenta.idAfectado), requests.IdVendedor);
                         viewModel.listacuentas = await RepetirVendedor($"{db}", requests.IdVendedor, requests.MultiCaja);
                         viewModel.cuenta = viewModel.listacuentas.LastOrDefault();
                         viewModel.venta = await V_TablaVentas_controler.Consulta_id(viewModel.idventa, $"{db}");
@@ -57,18 +57,18 @@ namespace Api.Controllers
             {
                 //en esta parte procedemos a consultar las cuentas activas por idBase
                 //procedemos a consultar si el usuario tiene cuantas activas
-                viewModel.listacuentas = await V_CuentasVenta_controler.Lista($"{db}", requests.IdUsuario,requests.MultiCaja);
+                viewModel.listacuentas = await V_CuentasVenta_controler.Lista($"{db}", requests.IdBase,requests.MultiCaja);
                 if (viewModel.listacuentas == null || viewModel.listacuentas.Count == 0)
                 {
                     //creamos una nueva cuenta
                     var niewVenta = await TablaVentas_f.NuevaVenta($"{db}", 0, requests.PorPropina);
                     if (niewVenta != null)
                     {
-                        viewModel.idventa = niewVenta.idAfectado;
+                        viewModel.idventa = Convert.ToInt32(niewVenta.idAfectado);
                         viewModel.guid = new Guid(niewVenta.mensaje);
                         // ahora relacionamos el vendedor con la venta
-                        var resprelacion = await R_VentaBase_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase);
-                        viewModel.listacuentas = await V_CuentasVenta_controler.Lista($"{db}", requests.IdUsuario, requests.MultiCaja);
+                        var resprelacion = await R_VentaBase_f.GestionarRelacion($"{db}", Convert.ToInt32(niewVenta.idAfectado), requests.IdBase);
+                        viewModel.listacuentas = await V_CuentasVenta_controler.Lista($"{db}", requests.IdBase, requests.MultiCaja);
                         viewModel.cuenta = viewModel.listacuentas.FirstOrDefault();
                         viewModel.venta = await V_TablaVentas_controler.Consulta_id(viewModel.idventa, $"{db}");
                     }
@@ -89,7 +89,7 @@ namespace Api.Controllers
             viewModel.listazonas = await V_Zona_controler.Lista($"{db}");
             viewModel.listaMesas = await V_Mesas_controler.lista($"{db}");
             viewModel.listacategorias = await V_Categoria_controler.ListaActivas($"{db}");
-            viewModel.listaproductos = await v_productoVenta_controler.Lista($"{db}",1,1);
+            viewModel.listaproductos = await v_productoVenta_controler.Lista($"{db}",1);
 
             return Ok(viewModel);
         }
@@ -108,10 +108,10 @@ namespace Api.Controllers
                 var niewVenta = await TablaVentas_f.NuevaVenta($"{db}", 0, requests.PorPropina);
                 if (niewVenta != null)
                 {
-                    viewModel.idventa = niewVenta.idAfectado;
+                    viewModel.idventa = Convert.ToInt32(niewVenta.idAfectado);
                     viewModel.guid = new Guid(niewVenta.mensaje);
                     //ahora creamos la relación del mesero con la venta
-                    R_VentaVendedor_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdVendedor);
+                    R_VentaVendedor_f.GestionarRelacion($"{db}", Convert.ToInt32(niewVenta.idAfectado), requests.IdVendedor);
                     //procedemos a consultar si el mesero tiene cuantas activas
                     viewModel.listacuentas = await V_CuentasVenta_controler.ListaMesero($"{db}", requests.IdVendedor);
                     viewModel.cuenta = viewModel.listacuentas.LastOrDefault();
@@ -130,11 +130,11 @@ namespace Api.Controllers
                 var niewVenta = await TablaVentas_f.NuevaVenta($"{db}", requests.IdBase, requests.PorPropina);
                 if (niewVenta.estado)
                 {
-                    viewModel.idventa = niewVenta.idAfectado;
+                    viewModel.idventa = Convert.ToInt32(niewVenta.idAfectado);
                     viewModel.guid =new Guid(niewVenta.mensaje);
                     // ahora relacionamos el vendedor con la venta
-                    var resprelacion=await R_VentaBase_f.GestionarRelacion($"{db}", niewVenta.idAfectado, requests.IdBase);
-                    viewModel.listacuentas = await RepetirUsuario($"{db}", requests.IdUsuario, requests.MultiCaja);
+                    var resprelacion=await R_VentaBase_f.GestionarRelacion($"{db}", Convert.ToInt32(niewVenta.idAfectado), requests.IdBase);
+                    viewModel.listacuentas = await RepetirUsuario($"{db}", requests.IdBase, requests.MultiCaja);
                     viewModel.cuenta = viewModel.listacuentas.LastOrDefault();
                     viewModel.idventa = viewModel.cuenta.id;
                     viewModel.venta = await V_TablaVentas_controler.Consulta_id(viewModel.idventa, $"{db}");

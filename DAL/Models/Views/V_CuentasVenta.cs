@@ -26,5 +26,6 @@ namespace DAL.Models.Views
         public string responsable { get; set; }
         public string telefonoResponsable { get; set; }
         public string nombremesa { get; set; }
+        public string nombreCD { get; set; }
     }
 }
