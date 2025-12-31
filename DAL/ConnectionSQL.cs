@@ -57,14 +57,7 @@ namespace DAL
                         }
                     }
                 }
-                if (respuesta == "[]" || respuesta=="null")
-                {
-                    return null;
-                }
-                else
-                {
-                    return respuesta;
-                }
+                return respuesta;
             }
             catch (Exception ex) 
             { 
