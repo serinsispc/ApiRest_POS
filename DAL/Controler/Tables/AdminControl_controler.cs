@@ -30,7 +30,7 @@ namespace DAL.Controler.Tables
             {
                 string error = ex.Message;
                 
-                return null;
+                return new AdminControl();
             }
         }
     }

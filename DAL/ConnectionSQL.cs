@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -13,87 +12,127 @@ namespace DAL
     public class ConnectionSQL
     {
         public static string connectionString = string.Empty;
+
         public static void ConexionBase(string db)
         {
-            connectionString = $"data source =.; initial catalog ={db}; user id =emilianop; password =Ser1ns1s@2020*";
-            //connectionString = $"data source =51.222.245.217; initial catalog ={db}; user id =emilianop; password =Ser1ns1s@2020*";
+            connectionString =
+                $"data source=.;initial catalog={db};user id=emilianop;password=Ser1ns1s@2020*;Connect Timeout=30;TrustServerCertificate=True;";
+            //connectionString =
+            //    $"data source=51.222.245.217;initial catalog={db};user id=emilianop;password=Ser1ns1s@2020*;Connect Timeout=30;TrustServerCertificate=True;";
         }
-        public async Task<string> EjecutarConsulta(string db,string consulta, [Optional] bool lista_)
+
+        // ================================
+        // CONSULTA NORMAL (DataTable)
+        // ================================
+        public async Task<string> EjecutarConsulta(string db, string consulta, [Optional] bool lista_)
         {
             try
             {
                 ConexionBase(db);
 
-                string? respuesta = "Error";
+                string respuesta = null;
+
                 using (var conexion = new SqlConnection(connectionString))
                 {
                     await conexion.OpenAsync();
+
                     using (var cmd = new SqlCommand(consulta, conexion))
                     {
                         cmd.CommandType = CommandType.Text;
+
+                        // 🔑 CLAVE PARA EVITAR TIMEOUT (30s por defecto)
+                        cmd.CommandTimeout = 180; // 3 minutos (ajusta si necesitas más)
 
                         using (var reader = await cmd.ExecuteReaderAsync())
                         {
                             DataTable dt = new DataTable();
                             dt.Load(reader);
-                            // Convertir DataTable a Lista de Diccionarios antes de serializar
-                            var lista = new List<Dictionary<string, object>>();
+
+                            // 👉 SI NO HAY FILAS → NULL (como antes)
+                            if (dt.Rows.Count == 0)
+                                return null;
+
+                            var listaDatos = new List<Dictionary<string, object>>();
+
                             foreach (DataRow row in dt.Rows)
                             {
                                 var dict = new Dictionary<string, object>();
+
                                 foreach (DataColumn col in dt.Columns)
                                 {
-                                    dict[col.ColumnName] = row[col] == DBNull.Value ? null : row[col];
+                                    dict[col.ColumnName] =
+                                        row[col] == DBNull.Value ? null : row[col];
                                 }
-                                lista.Add(dict);
+
+                                listaDatos.Add(dict);
                             }
 
-                            // Serializar la lista de diccionarios en JSON
-                            respuesta = JsonSerializer.Serialize(lista, new JsonSerializerOptions { WriteIndented = true });
+                            // JSON lista
+                            respuesta = JsonSerializer.Serialize(
+                                listaDatos,
+                                new JsonSerializerOptions { WriteIndented = true }
+                            );
+
+                            // 👉 Si no es lista, devolver SOLO el primer objeto
                             if (lista_ == false)
                             {
-                                respuesta = JsonSerializer.Serialize(lista.FirstOrDefault(), new JsonSerializerOptions { WriteIndented = true });
+                                var first = listaDatos.FirstOrDefault();
+                                if (first == null)
+                                    return null;
+
+                                respuesta = JsonSerializer.Serialize(
+                                    first,
+                                    new JsonSerializerOptions { WriteIndented = true }
+                                );
                             }
                         }
                     }
                 }
+
                 return respuesta;
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 string msg = ex.Message;
-                return null;
+                return null; // ✅ MISMO COMPORTAMIENTO ORIGINAL
             }
-
         }
 
+        // ================================
+        // CONSULTA QUE YA DEVUELVE JSON
+        // ================================
         public async Task<string> EjecutarConsultaJsonDirecto(string db, string consulta)
         {
             try
             {
                 ConexionBase(db);
 
-                using var conexion = new SqlConnection(connectionString);
-                await conexion.OpenAsync();
+                using (var conexion = new SqlConnection(connectionString))
+                {
+                    await conexion.OpenAsync();
 
-                using var cmd = new SqlCommand(consulta, conexion)
-                { CommandType = CommandType.Text };
+                    using (var cmd = new SqlCommand(consulta, conexion))
+                    {
+                        cmd.CommandType = CommandType.Text;
 
-                // Lee el valor directamente
-                var result = await cmd.ExecuteScalarAsync();
+                        // 🔑 Timeout para consultas largas
+                        cmd.CommandTimeout = 180;
 
-                // Convierte a string
-                string json = result?.ToString() ?? "[]";
+                        var result = await cmd.ExecuteScalarAsync();
 
-                return json;
+                        // 👉 Si SQL no devuelve nada → NULL
+                        if (result == null || result == DBNull.Value)
+                            return null;
+
+                        return result.ToString();
+                    }
+                }
             }
             catch (Exception ex)
             {
-                // Loguea el error si quieres
                 string msg = ex.Message;
                 return null;
             }
         }
-
     }
 }

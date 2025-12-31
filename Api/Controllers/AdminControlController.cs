@@ -15,7 +15,14 @@ namespace Api.Controllers
         {
             var db = HttpContext.Items["DB"];
             var resp = await AdminControl_controler.Consultar($"{db}");
-            return Ok(resp);
+            if (resp != null)
+            {
+                return Ok(resp);
+            }
+            else
+            {
+                return Ok(new AdminControlController());
+            }
         }
     }
 }
