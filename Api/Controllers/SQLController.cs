@@ -17,6 +17,7 @@ namespace Api.Controllers
                 var db=HttpContext.Items["DB"] as string;
                 var cn=new ConnectionSQL();
                 var result = await cn.EjecutarConsulta(db, json.query,true);
+                if (result == null) result = "[]";
                 return Ok(result);
             }
             catch (Exception ex)
