@@ -17,7 +17,7 @@ namespace DAL.Controler.Views
                 var query = $"SELECT * FROM V_Comandas where estado=1";
                 var resp = await cn.EjecutarConsulta(db, query, true);
                 var lista = new List<V_Comandas>();
-                if (resp != null)
+                if (resp != null && resp != "[]")
                 {
                     lista = Newtonsoft.Json.JsonConvert.DeserializeObject<List<V_Comandas>>(resp);
                 }

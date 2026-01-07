@@ -17,7 +17,14 @@ namespace DAL.Controler.Tables
                 var cn=new ConnectionSQL();
                 var query = $"SELECT top 1 * FROM ConfiguracionSMTP";
                 var resp = await cn.EjecutarConsulta(db,query);
-                return JsonConvert.DeserializeObject<ConfiguracionSMTP>(resp);
+                if(resp!=null && resp != "null")
+                {
+                    return JsonConvert.DeserializeObject<ConfiguracionSMTP>(resp);
+                }
+                else
+                {
+                    return new ConfiguracionSMTP();
+                }
             }
             catch(Exception ex)
             {

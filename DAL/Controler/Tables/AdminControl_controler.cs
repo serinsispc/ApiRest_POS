@@ -17,7 +17,7 @@ namespace DAL.Controler.Tables
                 var cn = new ConnectionSQL();
                 string query = "SELECT TOP 1 * FROM AdminControl WHERE tipo_admincontrol != 0";
                 var resp =await cn.EjecutarConsulta(db,query);
-                if (resp != null) 
+                if (resp != "null") 
                 {
                     return JsonConvert.DeserializeObject<AdminControl>(resp);
                 }
@@ -30,7 +30,7 @@ namespace DAL.Controler.Tables
             {
                 string error = ex.Message;
                 
-                return null;
+                return new AdminControl();
             }
         }
     }
