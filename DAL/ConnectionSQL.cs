@@ -15,8 +15,8 @@ namespace DAL
 
         public static void ConexionBase(string db)
         {
-            connectionString =
-                $"data source=.;initial catalog={db};user id=emilianop;password=Ser1ns1s@2020*;Connect Timeout=30;TrustServerCertificate=True;";
+            connectionString =$"data source=.;initial catalog={db};user id=emilianop;password=Ser1ns1s@2020*;Connect Timeout=30;TrustServerCertificate=True;";
+            //connectionString =$"data source=192.168.0.196;initial catalog={db};user id=emilianop;password=Ser1ns1s@2020*;Connect Timeout=30;TrustServerCertificate=True;";
             //connectionString =
             //    $"data source=51.222.245.217;initial catalog={db};user id=emilianop;password=Ser1ns1s@2020*;Connect Timeout=30;TrustServerCertificate=True;";
         }
